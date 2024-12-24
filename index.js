@@ -17,6 +17,15 @@ app.post('/meetings', (req, res) => {
         return res.status(400).json({ error: 'All fields are required' });
     }
 
+    // Check if this slot is already taken
+    const isConflict = meetings.some(meeting => {
+        return meeting.date === date && meeting.time === time;
+    });
+
+    if (isConflict) {
+        return res.status(400).json({ error: 'This time slot is already taken. Please choose another one.' });
+    }
+
     const newMeeting = {
         id: meetings.length + 1, // Simple ID generation for now
         title,
